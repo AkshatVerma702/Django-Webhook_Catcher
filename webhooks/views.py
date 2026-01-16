@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
+request_store = []
+
+@csrf_exempt
 # Create your views here.
 def testing(request):
     print("Method: ", request.method)
@@ -16,5 +20,7 @@ def testing(request):
         "get params": request.GET.dict(),
         "headers": dict(request.headers)
     }
-    print(data.items())
-    return render(request, "index.html", {"data": data})
+    request_store.append(data)
+    print(len(request_store))
+
+    return render(request, "index.html", {"data": request_store})

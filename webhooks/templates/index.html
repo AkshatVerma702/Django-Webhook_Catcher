@@ -1,8 +1,11 @@
 <h1>HTTP Request(s) caught:</h1>
 <ul>
-    {% for key, value in data.items %}
-    <li>
-        <strong>{{key}}</strong> : <h2>{{value}}</h2>
-    </li>
+    <strong>Number of Requests: </strong> {{data|length}}  
+    {% for requests in data%}
+        {% for key, value in requests.items %}
+        <li>
+            <strong>{{key}}</strong> : <h2>{{value}}</h2>
+        </li>
+        {% endfor %}
     {% endfor %}
 </ul>
