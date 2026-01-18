@@ -1,0 +1,18 @@
+<h1>HTTP Request(s) caught:</h1>
+
+<ul>
+    {% for req in records %}
+        <li>
+            <strong>Time:</strong> {{ req.timestamp }} <br>
+            <strong>Method:</strong> {{ req.http_method }} <br>
+            <strong>Path:</strong> {{ req.path }} <br>
+            <strong>Headers:</strong>
+            <pre>{{ req.headers }}</pre>
+            <strong>Body:</strong>
+            <pre>{{ req.request_body }}</pre>
+        </li>
+        <hr>
+    {% empty %}
+        <li>No requests captured yet.</li>
+    {% endfor %}
+</ul>

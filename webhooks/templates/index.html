@@ -1,11 +1,12 @@
 <h1>HTTP Request(s) caught:</h1>
+
 <ul>
-    <strong>Number of Requests: </strong> {{data|length}}  
-    {% for requests in data%}
-        {% for key, value in requests.items %}
+    {% for req in data %}
         <li>
-            <strong>{{key}}</strong> : <h2>{{value}}</h2>
+            ({{ req.id }}) &nbsp {{ req.path }} &nbsp {{ req.timestamp }}
         </li>
-        {% endfor %}
+        <hr>
+    {% empty %}
+        <li>No requests captured yet.</li>
     {% endfor %}
 </ul>
