@@ -3,7 +3,7 @@
 <ul>
     {% for req in data %}
         <li>
-            ({{ req.id }}) &nbsp {{ req.path }} &nbsp {{ req.timestamp }}
+            <a href="{% url 'getRequest' req.id %}">({{ req.id }}) &nbsp {{ req.path }} &nbsp {{ req.timestamp }}</a>
         </li>
         <hr>
     {% empty %}

@@ -8,11 +8,6 @@ import json
 @csrf_exempt
 # Create your views here.
 def catch(request):
-    print("Method: ", request.method)
-    print("Path:", request.path)
-    print("GET params:", request.GET.dict())   
-    print("Headers:", dict(request.headers))   
-    print("Body (raw):", request.body.decode('utf-8', errors='ignore'))  
     body = request.body.decode("utf-8", errors="ignore")
     data = {
         "timestamp": timezone.now(),
@@ -23,15 +18,15 @@ def catch(request):
     }
 
     HttpRequest.objects.create(**data)
-    requests = HttpRequest.objects.order_by("timestamp")
 
+    request_Count = HttpRequest.objects.count()
 
-    return render(request, "index.html", {"data": requests})
+    return HttpResponse("HTTP Request Caught " + str(request_Count))
 
 def viewRequests(request):
     allrecords = HttpRequest.objects.all()
 
-    return render(request, "view.html", {"records": allrecords})
+    return render(request, "index.html", {"data": allrecords})
 
 def getRequest(request, target_id):
     target_record = get_object_or_404(HttpRequest, id = target_id)
