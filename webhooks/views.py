@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from .models import HttpRequest
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 
 @csrf_exempt
@@ -24,9 +25,13 @@ def catch(request):
     return HttpResponse("HTTP Request Caught " + str(request_Count))
 
 def viewRequests(request):
-    allrecords = HttpRequest.objects.all()
+    allrecords = HttpRequest.objects.all().order_by("-timestamp")
+    paginator = Paginator(allrecords, 5)
+    page_number = request.GET.get('page')
 
-    return render(request, "index.html", {"data": allrecords})
+
+    page_obj = paginator.get_page(page_number)
+    return render(request, "index.html", {"page_obj": page_obj, "records": allrecords})
 
 def getRequest(request, target_id):
     target_record = get_object_or_404(HttpRequest, id = target_id)
