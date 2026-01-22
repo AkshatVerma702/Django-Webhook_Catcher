@@ -17,23 +17,17 @@ def catch(request):
         "headers": json.dumps(dict(request.headers)),
         "request_body": body
     }
-
     HttpRequest.objects.create(**data)
-
     request_Count = HttpRequest.objects.count()
-
     return HttpResponse("HTTP Request Caught " + str(request_Count))
 
 def viewRequests(request):
     allrecords = HttpRequest.objects.all().order_by("-timestamp")
     paginator = Paginator(allrecords, 5)
     page_number = request.GET.get('page')
-
-
     page_obj = paginator.get_page(page_number)
-    return render(request, "index.html", {"page_obj": page_obj, "records": allrecords})
+    return render(request, "index.html", {"page_obj": page_obj, "records": page_obj.object_list})
 
 def getRequest(request, target_id):
     target_record = get_object_or_404(HttpRequest, id = target_id)
-
     return render(request, "view.html", {"records": [target_record]})
