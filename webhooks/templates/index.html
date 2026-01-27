@@ -1,15 +1,32 @@
 <h1>HTTP Request(s) caught:</h1>
 
 <div class = "pagination">
+    <form method="get">
+        <div class="filters">
+            <strong>Filters</strong> <br>
+                {% for key, values in filters.items %}
+                    <strong>{{ key }}</strong>
+                    <select name="{{ key }}" id="{{ key }}">  
+                        {% for val in values %}
+                            <option value="{{val}}" {% if val == active_method %} selected {% endif %}>{{ val }}</option>
+                        {% endfor %}
+                    </select>
+                {% endfor %}
+        </div>
+        <button type="submit">Apply</button>
+    </form>
+    
+
     {% if page_obj.has_previous %}
         <a href= "?page={{ page_obj.previous_page_number }}">Previous</a>
     {% else %}
         Previous
     {% endif %}
+
     <ul>
         {% for req in records %}
             <li>
-                <a href="{% url 'getRequest' req.id %}">({{ req.id }}) &nbsp {{req.http_method}} &nbsp {{ req.path }} &nbsp [{{ req.timestamp }}]</a>
+                <a href="{% url 'getRequest' req.id %}">({{ req.id }}) &nbsp {{req.http_method}} &nbsp {{ req.path }} &nbsp at &nbsp  [{{ req.timestamp }}] [{{ req.response_status }}]</a>
             </li>
             <hr>
         {% empty %}
@@ -19,6 +36,6 @@
     <span>Page {{ page_obj.number }} of {{page_obj.paginator.num_pages }}</span>
 
     {% if page_obj.has_next %}
-        <a href = "?page={{ page_obj.next_page_number }}">Next</a>
+        <a href = "?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">Next</a>
     {% endif %}
 </div>

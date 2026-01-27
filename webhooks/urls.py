@@ -3,6 +3,6 @@ from django.urls import path
 
 urlpatterns = [
     path('request/', views.catch),
-    path('allrequests/', views.viewRequests),
+    path('allrequests/', views.viewRequests, name="getAllRequests"),
     path("<int:target_id>/", views.getRequest, name="getRequest")
 ]
