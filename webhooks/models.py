@@ -22,15 +22,14 @@ class HttpRequest(models.Model):
         x_frwd = request.META.get("HTTP_X_FORWARDED_FOR")
         entry = cls(
             timestamp = timezone.now(),
-            method = request.method,
+            http_method = request.method,
             response_status = 0,
             content_type =request.content_type,
             ip_addr = x_frwd.split(",")[0] if x_frwd else request.META.get("REMOTE_ADDR"),
             headers = json.dumps(dict(request.headers)), 
             path = request.path,
             query_params = json.dumps(request.GET.dict()),
-            body = request.body.decode("utf-8", errors="ignore")
+            request_body = request.body.decode("utf-8", errors="ignore")
         )
-        entry.save()
 
         return entry

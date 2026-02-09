@@ -9,8 +9,10 @@ import json
 @csrf_exempt
 # Create your views here.
 def catch(request):
-    
-    return HttpResponse("HTTP Request Caught ")
+    entry = HttpRequest.createEntry(request)
+    response = HttpResponse(...)
+    print(response)
+    return HttpResponse(f"HTTP Request #{entry.id} caught")
 
 def viewRequests(request):
     allrecords = HttpRequest.objects.all().order_by("-timestamp")
