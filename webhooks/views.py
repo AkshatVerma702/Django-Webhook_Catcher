@@ -12,7 +12,7 @@ def catch(request):
     entry = HttpRequest.createEntry(request)
     response = HttpResponse(...)
     print(response)
-    return HttpResponse(f"HTTP Request #{entry.id} caught")
+    return HttpResponse(f"HTTP Request caught")
 
 def viewRequests(request):
     allrecords = HttpRequest.objects.all().order_by("-timestamp")
