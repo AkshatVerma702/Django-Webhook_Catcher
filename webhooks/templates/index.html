@@ -7,6 +7,7 @@
                 {% for key, values in filters.items %}
                     <strong>{{ key }}</strong>
                     <select name="{{ key }}" id="{{ key }}">  
+                        <option value="" {% if not request.GET.get(key) %}selected{% endif %} disabled>Select {{ key|capFirst }}</option>
                         {% for val in values %}
                             <option value="{{val}}" {% if val == active_method %} selected {% endif %}>{{ val }}</option>
                         {% endfor %}
@@ -14,7 +15,6 @@
                 {% endfor %}
         </div>
         <button type="submit">Apply</button>
-        
     </form>
     
 
@@ -41,4 +41,8 @@
     {% endif %}
 
 </div>
-<button>Clear All</button>
+
+<form method="DELETE" action="{% url 'delete_all' %}">
+    <button type="submit">Delete All</button>
+</form>
+
