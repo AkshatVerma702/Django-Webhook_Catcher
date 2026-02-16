@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webhooks.apps.WebhooksConfig'
+    'webhooks.apps.WebhooksConfig',
+    'bootstrap5'
 ]
 
 MIDDLEWARE = [

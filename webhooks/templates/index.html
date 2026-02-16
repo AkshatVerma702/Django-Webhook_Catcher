@@ -1,48 +1,144 @@
-<h1>HTTP Request(s) caught:</h1>
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTTP Request Dashboard</title>
+    {% bootstrap_css %}
+</head>
+<body class="bg-light">
 
-<div class = "pagination">
-    <form method="get">
-        <div class="filters">
-            <strong>Filters</strong> <br>
-                {% for key, values in filters.items %}
-                    <strong>{{ key }}</strong>
-                    <select name="{{ key }}" id="{{ key }}">  
-                        <option value="" {% if not request.GET.get(key) %}selected{% endif %} disabled>Select {{ key|capFirst }}</option>
-                        {% for val in values %}
-                            <option value="{{val}}" {% if val == active_method %} selected {% endif %}>{{ val }}</option>
-                        {% endfor %}
-                    </select>
-                {% endfor %}
+<div class="container py-4">
+
+    <!-- Title -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">HTTP Request Dashboard</h1>
+        <p class="text-muted">Monitor and filter captured requests</p>
+    </div>
+
+    <!-- Filters & Sorting Card -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+
+            <form method="get">
+                <div class="row g-3 align-items-end">
+
+                    {% for key, values in filters.items %}
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">{{ key }}</label>
+                            <select name="{{ key }}" id="{{ key }}" class="form-select">
+                                {% for val in values %}
+                                    <option value="{{val}}" {% if val == active_method %} selected {% endif %}>
+                                        {{ val }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Apply Filters
+                        </button>
+                    </div>
+
+                    <div class="col-md-4 text-md-end">
+                        <div class="btn-group">
+                            <a href="?sort=timestamp_asc" class="btn btn-outline-secondary">
+                                Oldest
+                            </a>
+                            <a href="?sort=timestamp_desc" class="btn btn-outline-secondary">
+                                Newest
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
         </div>
-        <button type="submit">Apply</button>
-    </form>
-    
+    </div>
 
-    {% if page_obj.has_previous %}
-        <a href= "?page={{ page_obj.previous_page_number }}">Previous</a>
-    {% else %}
-        Previous
-    {% endif %}
+    <!-- Requests Table Card -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
 
-    <ul>
-        {% for req in records %}
-            <li>
-                <a href="{% url 'getRequest' req.id %}">({{ req.id }}) &nbsp {{req.http_method}} &nbsp {{ req.path }} &nbsp at &nbsp  [{{ req.timestamp }}] [{{ req.response_status }}]</a>
-            </li>
-            <hr>
-        {% empty %}
-            <li>No requests captured yet.</li>
-        {% endfor %}
-    </ul>
-    <span>Page {{ page_obj.number }} of {{page_obj.paginator.num_pages }}</span>
+            <ul class="list-group list-group-flush">
+                {% for req in records %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <a href="{% url 'getRequest' req.id %}" class="text-decoration-none">
+                                <strong>#{{ req.id }}</strong> |
+                                {{ req.http_method }} |
+                                {{ req.path }}
+                                <br>
+                                <small class="text-muted">
+                                    {{ req.timestamp }}
+                                </small>
+                            </a>
+                        </div>
 
-    {% if page_obj.has_next %}
-        <a href = "?{{ request.GET.urlencode }}&page={{ page_obj.next_page_number }}">Next</a>
-    {% endif %}
+                        <span class="badge 
+                            {% if req.response_status < 300 %}
+                                bg-success
+                            {% elif req.response_status < 500 %}
+                                bg-warning text-dark
+                            {% else %}
+                                bg-danger
+                            {% endif %}
+                        ">
+                            {{ req.response_status }}
+                        </span>
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-center text-muted">
+                        No requests captured yet.
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-secondary btn-sm"
+                   href="?page={{ page_obj.previous_page_number }}&{{ query_params }}">
+                    Previous
+                </a>
+            {% endif %}
+        </div>
+
+        <div>
+            <span class="text-muted">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </div>
+
+        <div>
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-secondary btn-sm"
+                   href="?{{ query_params }}&page={{ page_obj.next_page_number }}">
+                    Next
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Delete All -->
+    <div class="text-center mt-4">
+        <form method="POST" action="{% url 'delete_all' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                Delete All Requests
+            </button>
+        </form>
+    </div>
 
 </div>
 
-<form method="DELETE" action="{% url 'delete_all' %}">
-    <button type="submit">Delete All</button>
-</form>
-
+{% bootstrap_javascript %}
+</body>
+</html>

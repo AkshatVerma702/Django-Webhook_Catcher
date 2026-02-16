@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('catch/', include('webhooks.urls')),
-    path('', views.health),
+    path('', views.health, name='health'),
     path('view/', include('webhooks.urls')),
     path('delete/', include('webhooks.urls'))
 ]

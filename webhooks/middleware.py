@@ -4,7 +4,7 @@ from .models import HttpRequest
 class myMiddleware(MiddlewareMixin):
     def process_request(self, request):
         req_path = request.path
-        if req_path == "/catch/request/":
+        if req_path.startswith('/catch'):
             entry = HttpRequest.createEntry(request)
             request.created_entry = entry
 
