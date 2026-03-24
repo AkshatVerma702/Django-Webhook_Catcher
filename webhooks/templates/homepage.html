@@ -1,0 +1,75 @@
+{% load bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webhook Catcher</title>
+    {% bootstrap_css %}
+</head>
+
+<body class="bg-light">
+
+<div class="container text-center py-5">
+
+    <h1 class="fw-bold mb-3">
+        Webhook Catcher
+    </h1>
+
+    <p class="text-muted fs-5">
+        Generate webhook URLs and inspect incoming HTTP requests in real time.
+    </p>
+
+    <div class="mt-5">
+
+        <a href="/view/allrequests/" class="btn btn-primary btn-lg me-3">
+            Open Dashboard
+        </a>
+
+        <button class="btn btn-success btn-lg" onclick="createDynamicRoute()">
+            Generate Webhook
+        </button>
+
+    </div>
+
+    <div id="webhook-container" class="mt-4 d-none">
+        <label class="form-label fw-semibold">Your Webhook URL</label>
+
+        <div class="input-group w-50 mx-auto">
+            <input type="text" id="webhook-url" class="form-control" readonly>
+
+            <button class="btn btn-outline-secondary" onclick="copyWebhook()">
+                Copy
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+async function createDynamicRoute(){
+
+    const response = await fetch("/catch/request/", {
+        method: "POST"
+    });
+
+    const data = await response.json();
+
+    const webhookUrl = data.url || `/catch/request/${data.token}/`;
+
+    const container = document.getElementById("webhook-container");
+    const input = document.getElementById("webhook-url");
+
+    input.value = window.location.origin + webhookUrl;
+    container.classList.remove("d-none");
+}
+
+function copyWebhook(){
+    const input = document.getElementById("webhook-url");
+    navigator.clipboard.writeText(input.value);
+}
+</script>
+
+{% bootstrap_javascript %}
+
+</body>
+</html>

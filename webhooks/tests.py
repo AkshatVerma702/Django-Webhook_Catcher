@@ -11,7 +11,7 @@ class HealthTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
     
     def test_catch_hit_success(self):
-        response = self.client.get(reverse('catchRequests'))
+        response = self.client.get(reverse('generateToken'))
         self.assertEqual(response.status_code, 200)
 
     def test_model_creation(self):

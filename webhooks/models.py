@@ -3,7 +3,20 @@ from django.utils import timezone
 import json
 
 # Create your models here.
+class WebhookToken(models.Model):
+    token = models.UUIDField(unique=True, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expiry = models.DateTimeField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
 class HttpRequest(models.Model):
+    token= models.ForeignKey(
+        WebhookToken,
+        on_delete=models.CASCADE,
+        related_name="requests",
+        null=True,
+        blank=True
+    )
     timestamp = models.DateTimeField("Request Date and Time")
     http_method = models.CharField(max_length=200)
     response_status = models.IntegerField(null=True, blank=True)
@@ -18,9 +31,10 @@ class HttpRequest(models.Model):
         return f"{self.http_method} {self.path} @ {self.timestamp}"
     
     @classmethod
-    def createEntry(cls, request):
+    def createEntry(cls, request, token_obj):
         x_frwd = request.META.get("HTTP_X_FORWARDED_FOR")
         entry = cls(
+            token = token_obj,
             timestamp = timezone.now(),
             http_method = request.method,
             response_status = 0,
@@ -33,3 +47,4 @@ class HttpRequest(models.Model):
         )
 
         return entry
+

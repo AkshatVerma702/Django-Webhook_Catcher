@@ -20,8 +20,7 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('catch/', include('webhooks.urls')),
-    path('', views.health, name='health'),
-    path('view/', include('webhooks.urls')),
-    path('delete/', include('webhooks.urls'))
+    path('health/', views.health, name='health'),
+    path('', views.homepage, name="homepage"),
+    path('', include('webhooks.urls'))
 ]
