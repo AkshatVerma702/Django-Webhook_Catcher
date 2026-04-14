@@ -10,6 +10,10 @@ class HealthTestCase(TestCase):
         response = self.client.get(reverse('health'))
         self.assertEqual(response.status_code, 200)
     
+    def test_homepage(self):
+        response = self.client.get(reverse('homepage'))
+        self.assertEqual(response.status_code, 200)
+
     def test_catch_hit_success(self):
         response = self.client.get(reverse('generateToken'))
         self.assertEqual(response.status_code, 200)
@@ -90,7 +94,7 @@ class HealthTestCase(TestCase):
         url = reverse('getAllRequests')
         response = self.client.get(url, {"sort": "timestamp_asc"})
         result = response.context["records"][0]
-        self.assertEqual(result.request_body, "later")
+        self.assertEqual(result.request_body, "early")
 
     def sorting_logic_data(self):
         HttpRequest.objects.create(
@@ -158,3 +162,41 @@ class HealthTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["records"]), 5)
         self.assertTrue(response.context["page_obj"].has_next())
+    
+    def test_delete_all(self):
+        self.create_pagination_data()
+
+        response = self.client.post(reverse("delete_all"))
+        self.assertEqual(HttpRequest.objects.count(), 0)
+    
+    def test_update_requests_api(self):
+        self.create_pagination_data()
+        response = self.client.get(reverse("updateView"))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("data", response.json())
+    
+    def test_invalid_request_id(self):
+        response = self.client.get(reverse("getRequest", kwargs={"target_id" : 9999}))
+        self.assertNotEqual(response.status_code, 200)
+    
+    def test_empty_filter(self):
+        response = self.client.get(reverse("getAllRequests"), {"Method": ""})
+        self.assertEqual(response.status_code, 200)
+    
+    def test_invalid_filter(self):
+        response = self.client.get(reverse("getAllRequests"), {"Method": "INVALID"})
+        self.assertEqual(len(response.context["records"]), 0)
+    
+    def test_generate_token(self):
+        response = self.client.post(reverse("generateToken"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_valid_token(self):
+        token_response = self.client.post(reverse("generateToken"))
+        token = token_response.json()["token"]
+        response = self.client.get(f"/webhook/{token}")
+        self.assertEqual(response.status_code, 200)
+    
+    def test_webhook_invalid_token(self):
+        response = self.client.get("/webhook/invalid-token")
+        self.assertNotEqual(response.status_code, 200)

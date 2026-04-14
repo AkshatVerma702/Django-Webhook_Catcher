@@ -54,6 +54,7 @@ def filter_records(request):
         path = "/" + path
         filtered_records = filtered_records.filter(path__startswith = path)
 
+
     filtered_records = date_query_set(date_filter, filtered_records)
 
     return filtered_records
