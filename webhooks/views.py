@@ -68,6 +68,7 @@ def updateView(request):
 
     data = [
         {
+            "id": req.id,
             "method": req.http_method,
             "status": req.response_status,
             "path": req.path,

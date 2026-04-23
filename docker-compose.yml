@@ -1,4 +1,3 @@
-version: '3.9'
 
 services:
   db: 
@@ -14,7 +13,7 @@ services:
     build: .
     # command: gunicorn Webhook_Catcher.wsgi:application --bind 127.0.0.0:8000
     volumes:
-      - .:/Django-Webhook_Catcher
+      - .:/Django Project/Django-Webhook_Catcher
     ports:
       - "8000:8000"
     depends_on:
