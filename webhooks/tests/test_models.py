@@ -45,3 +45,6 @@ class RequestModelTests(TestCase):
         HttpRequest.objects.all().delete()
         record_count =HttpRequest.objects.count()
         self.assertEqual(record_count, 0)
+    
+    def test_random(self):
+        self.assertEqual(0, 0)
