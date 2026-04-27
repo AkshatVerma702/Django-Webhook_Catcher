@@ -6,6 +6,29 @@ jobs:
   job_1:
     name: Testing Project
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: test_db
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          -- health-cmd:"pg_isready -U postgres"
+          -- health-interval=10s
+          -- health-timeout=5s
+          -- health-retries=5
+      
+    env: 
+      DB_NAME: webhook_db
+      DB_USER: postgres
+      DB_PASSWORD: 826702
+      DB_HOST: localhost
+      DB_PORT: 5432
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
