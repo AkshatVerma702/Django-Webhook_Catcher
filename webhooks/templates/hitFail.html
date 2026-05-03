@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Failed</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+            background: #ffecec;
+            font-family: Arial;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cross {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 5px solid #d90429;
+            position: relative;
+            animation: scaleIn 0.3s ease-in-out;
+            margin-bottom: 10px;
+        }
+
+        .cross::before,
+        .cross::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 5px;
+            background: #d90429;
+            transform-origin: center;
+        }
+
+        .cross::before {
+            transform: translate(-50%, -50%) rotate(45deg);
+            animation: drawLine 0.3s ease forwards 0.2s;
+        }
+
+        .cross::after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+            animation: drawLine 0.3s ease forwards 0.4s;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        @keyframes drawLine {
+            from {
+                width: 0;
+            }
+            to {
+                width: 50px;
+            }
+        }
+
+        .message {
+            font-size: 20px;
+            color: #d90429;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cross"></div>
+        <div class="message">Request Failed</div>
+    </div>
+</body>
+</html>

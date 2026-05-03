@@ -7,6 +7,7 @@ from .models import HttpRequest, WebhookToken
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import uuid
 from datetime import timedelta
+import json
 
 def viewRequests(request):
     records = filter_records(request)
@@ -100,6 +101,7 @@ def date_query_set(filter, allrecords):
 
 def getRequest(request, target_id):
     target_record = get_object_or_404(HttpRequest, id = target_id)
+    target_record.headers = json.loads(target_record.headers)
     return render(request, "view.html", {"records": [target_record]})
 
 
@@ -130,7 +132,7 @@ def generateToken(request):
 
 def catchRequest(request, token):
     if not hasattr(request, "token_obj"):
-        return HttpResponse("Invalid Webhook", status=404)
-    return HttpResponse("Webhook Hit")
+        return render(request, "hitFail.html")
+    return render(request, "hitSuccess.html")
 
 
