@@ -12,8 +12,8 @@ services:
   web:
     build: .
     # command: gunicorn Webhook_Catcher.wsgi:application --bind 127.0.0.0:8000
-    volumes:
-      - .:/Django Project/Django-Webhook_Catcher
+    # volumes:
+    #   - .:/Django Project/Django-Webhook_Catcher
     ports:
       - "8000:8000"
     depends_on:
@@ -24,6 +24,11 @@ services:
       DB_PASSWORD: webhook_pass
       DB_HOST: db
       DB_PORT: 5432
+    develop:
+      watch: 
+        - action: sync
+          path: .
+          target: /Django-Webhook_Catcher/webhooks/templates
 
 volumes:
   postgres_data:
