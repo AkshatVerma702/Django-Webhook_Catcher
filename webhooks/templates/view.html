@@ -106,7 +106,7 @@ label{
     width: 52px;
     height: 52px;
     border: none;
-    background-color: var(--background);
+    background-color: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -123,7 +123,7 @@ label{
 }
 </style>
 <body>
-    <button class="theme-btn" onclick="toggleDarkMode()"></button>
+    <button class="theme-btn"></button>
     <div class="main-container card">
         <div class="card-title">Webhook Received Successfully</div>
         <div class="details">
@@ -142,23 +142,28 @@ label{
         const savedTheme = localStorage.getItem("theme")
 
         if (savedTheme === "dark"){
+            console.log("Dark mode enabled")
             changeThemeIcon(true)
             document.body.classList.add("dark-mode")
         }
         else{
+            console.log("Light mode enabled")
             changeThemeIcon(false)
         }
     };
 
     function toggleDarkMode(){
+        console.log("Toggling")
         let dark_theme = document.body.classList.contains("dark-mode")
-
+        console.log(dark_theme)
         if (dark_theme === false){
+            console.log("Dark theme is not false")
             document.body.classList.toggle("dark-mode")
             changeThemeIcon(!dark_theme)
             localStorage.setItem("theme", "dark")
         }
         else{
+            console.log("Else block")
             document.body.classList.remove("dark-mode")
             changeThemeIcon(!dark_theme)
             localStorage.setItem("theme", "light")
@@ -170,7 +175,7 @@ label{
         console.log("changing Icon")
         let btn_space = document.querySelector(".theme-btn")
         if (dark_mode === true){
-            btn_space.innerHTML = '<i class="dark-mode-icon bi bi-moon-fill fs-3" onclick="toggleDarkMode()"></i>'
+            btn_space.innerHTML = '<i class="dark-mode-icon bi bi-moon fs-3" onclick="toggleDarkMode()"></i>'
         }
         else if (dark_mode === false){
             btn_space.innerHTML = '<i class="dark-mode-icon bi bi-brightness-high-fill fs-3" onclick="toggleDarkMode()"></i>'
